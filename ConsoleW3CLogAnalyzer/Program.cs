@@ -20,9 +20,21 @@ namespace ConsoleW3CLogAnalyzer
             Console.WriteLine($"{sw.ElapsedMilliseconds} ms");
             Console.WriteLine();
 
-            sw = Stopwatch.StartNew();
+            sw.Restart();
+            Console.WriteLine("TestReportAsyncLinq_Method - cs-method");
+            await TestReportAsyncLinq_Method();
+            Console.WriteLine($"{sw.ElapsedMilliseconds} ms");
+            Console.WriteLine();
+
+            sw.Restart();
             Console.WriteLine("TestReportAsync_Method - cs-method");
             await TestReportAsync_Method();
+            Console.WriteLine($"{sw.ElapsedMilliseconds} ms");
+            Console.WriteLine();
+
+            sw.Restart();
+            Console.WriteLine("TestReportSyncLinq_Method - cs-method");
+            await TestReportSyncLinq_Method();
             Console.WriteLine($"{sw.ElapsedMilliseconds} ms");
             Console.WriteLine();
 
@@ -44,14 +56,41 @@ namespace ConsoleW3CLogAnalyzer
             Console.WriteLine($"{sw.ElapsedMilliseconds} ms");
             Console.WriteLine();
         }
-        static async Task TestReportAsync_Method()
+
+        static List<LogFactory> GetLogFactories()
         {
             List<LogFactory> factories = new List<LogFactory>();
             factories.Add(new W3cLogFileFactory("w3c.test.short.log"));
             factories.Add(new W3cLogFileFactory("w3c.test.log"));
             factories.Add(new CsvLogFileFactory("csv.test.short.log"));
 
-            using (var analyser = new LogAnalyserAsync(factories))
+            if (File.Exists("w3c.test.verylong.log"))
+            {
+                factories.Add(new W3cLogFileFactory("w3c.test.verylong.log"));
+            }
+
+            return factories;
+        }
+
+        static async Task TestReportAsyncLinq_Method()
+        {
+            using (LogAnalyserAsync analyser = new LogAnalyserAsync(GetLogFactories()))
+            {
+                var distinctMethodCounts = await analyser
+                    .GroupBy(d => d["cs-method"])
+                    .Select(t => new
+                    {
+                        Category = t.Key,
+                        Count = t.CountAsync()
+                    }).ToListAsync();
+
+                distinctMethodCounts.ForEach(d => Console.WriteLine($"{d}"));
+            }
+        }
+
+        static async Task TestReportAsync_Method()
+        {
+            using (LogAnalyserAsync analyser = new LogAnalyserAsync(GetLogFactories()))
             {
                 var report = new Dictionary<string, ReportType>();
 
@@ -77,14 +116,27 @@ namespace ConsoleW3CLogAnalyzer
                 }
             }
         }
+
+        static async Task TestReportSyncLinq_Method()
+        {
+            using (var analyser = new LogAnalyser(GetLogFactories()))
+            {
+
+                var distinctMethodCounts = analyser
+                    .GroupBy(d => d["cs-method"])
+                    .Select(t => new
+                    {
+                        Category = t.Key,
+                        Count = t.Count(),
+                    }).ToList();
+
+                distinctMethodCounts.ForEach(d => Console.WriteLine($"{d}"));
+            }
+        }
+
         static async Task TestReportSync_Method()
         {
-            List<LogFactory> factories = new List<LogFactory>();
-            factories.Add(new W3cLogFileFactory("w3c.test.short.log"));
-            factories.Add(new W3cLogFileFactory("w3c.test.log"));
-            factories.Add(new CsvLogFileFactory("csv.test.short.log"));
-
-            using (var analyser = new LogAnalyser(factories))
+            using (var analyser = new LogAnalyser(GetLogFactories()))
             {
                 var report = new Dictionary<string, ReportType>();
 
@@ -113,12 +165,7 @@ namespace ConsoleW3CLogAnalyzer
 
         static async Task TestReportSync_Url()
         {
-            List<LogFactory> factories = new List<LogFactory>();
-            factories.Add(new W3cLogFileFactory("w3c.test.short.log"));
-            factories.Add(new W3cLogFileFactory("w3c.test.log"));
-            factories.Add(new CsvLogFileFactory("csv.test.short.log"));
-
-            using (var analyser = new LogAnalyser(factories))
+            using (var analyser = new LogAnalyser(GetLogFactories()))
             {
                 var report = new Dictionary<string, ReportType>();
 
@@ -144,14 +191,10 @@ namespace ConsoleW3CLogAnalyzer
                 }
             }
         }
+
         static void TestSyncQuery_Where_POST()
         {
-            List<LogFactory> factories = new List<LogFactory>();
-            factories.Add(new W3cLogFileFactory("w3c.test.short.log"));
-            factories.Add(new W3cLogFileFactory("w3c.test.log"));
-            factories.Add(new CsvLogFileFactory("csv.test.short.log"));
-
-            using (var analyser = new LogAnalyser(factories))
+            using (var analyser = new LogAnalyser(GetLogFactories()))
             {
                 IEnumerable<Dictionary<string, string>> query = analyser
                     .Where(a => a["cs-method"] == "POST");
@@ -167,14 +210,10 @@ namespace ConsoleW3CLogAnalyzer
                 }
             }
         }
+
         static void TestSyncQuery_Where_DELETEorPOST()
         {
-            List<LogFactory> factories = new List<LogFactory>();
-            factories.Add(new W3cLogFileFactory("w3c.test.short.log"));
-            factories.Add(new W3cLogFileFactory("w3c.test.log"));
-            factories.Add(new CsvLogFileFactory("csv.test.short.log"));
-
-            using (var analyser = new LogAnalyser(factories))
+            using (var analyser = new LogAnalyser(GetLogFactories()))
             {
                 IEnumerable<Dictionary<string, string>> query = analyser
                     .Where(a => a["cs-method"] == "DELETE" || a["cs-method"] == "POST");

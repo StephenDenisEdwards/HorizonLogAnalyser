@@ -71,5 +71,10 @@ namespace Horizon.Utility.LogAnylyser
         {
             ReleaseUnmanagedResources();
         }
+
+        public IEnumerable<T> Report<T>(Func<object, object> func) 
+        {
+            throw new NotImplementedException();
+        }
     }
 }
