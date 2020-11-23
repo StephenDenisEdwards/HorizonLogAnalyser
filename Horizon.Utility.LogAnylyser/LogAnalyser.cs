@@ -36,9 +36,7 @@ namespace Horizon.Utility.LogAnylyser
                 while (!logFile.Item2.EndOfStream)
                 {
                     var line = logFile.Item2.ReadLine();
-
                     var fieldValues = logFile.Item1.Values(line);
-
                     var dict = new Dictionary<string, string>();
 
                     for (var i = 0; i < fieldValues.Length; i++) dict.Add(logFile.Item1[i], fieldValues[i]);
