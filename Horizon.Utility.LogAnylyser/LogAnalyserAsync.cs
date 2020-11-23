@@ -15,11 +15,13 @@ namespace Horizon.Utility.LogAnylyser
 
         public LogAnalyserAsync(LogFactory logFactory) : this()
         {
+            if (logFactory == null) throw new ArgumentNullException(nameof(logFactory));
             Add(logFactory.Create());
         }
 
         public LogAnalyserAsync(IEnumerable<LogFactory> logFactories) : this()
         {
+            if (logFactories == null) throw new ArgumentNullException(nameof(logFactories));
             foreach (var logFactory in logFactories) Add(logFactory.Create());
         }
 

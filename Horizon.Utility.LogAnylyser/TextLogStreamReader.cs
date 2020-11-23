@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace Horizon.Utility.LogAnylyser
@@ -9,7 +10,7 @@ namespace Horizon.Utility.LogAnylyser
 
         public TextLogStreamReader(StreamReader streamReader)
         {
-            _streamReader = streamReader;
+            _streamReader = streamReader ?? throw new ArgumentNullException(nameof(streamReader));
         }
 
         public void Dispose()

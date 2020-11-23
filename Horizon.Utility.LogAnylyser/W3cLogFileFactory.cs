@@ -9,7 +9,7 @@ namespace Horizon.Utility.LogAnylyser
 
         public W3cLogFileFactory(string logFilePathName)
         {
-            _logFilePathName = logFilePathName;
+            _logFilePathName = logFilePathName ?? throw new ArgumentNullException(nameof(logFilePathName));
         }
 
         public override Tuple<ILogFieldList, ILogStreamReader> Create()

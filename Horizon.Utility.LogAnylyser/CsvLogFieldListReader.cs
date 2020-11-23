@@ -10,7 +10,7 @@ namespace Horizon.Utility.LogAnylyser
 
         public CsvLogFieldListReader(ILogStreamReader logStreamReader)
         {
-            _logStreamReader = logStreamReader;
+            _logStreamReader = logStreamReader ?? throw new ArgumentNullException(nameof(logStreamReader));
 
             if (_logStreamReader.EndOfStream) throw new Exception("SCV file is empty.");
 

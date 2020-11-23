@@ -10,7 +10,7 @@ namespace Horizon.Utility.LogAnylyser
 
         public W3cLogFieldListReader(ILogStreamReader logStreamReader)
         {
-            _logStreamReader = logStreamReader;
+            _logStreamReader = logStreamReader ?? throw new ArgumentNullException(nameof(logStreamReader));
 
             var found = false;
 

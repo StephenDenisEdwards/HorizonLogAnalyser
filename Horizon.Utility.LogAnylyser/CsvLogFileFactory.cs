@@ -9,7 +9,7 @@ namespace Horizon.Utility.LogAnylyser
 
         public CsvLogFileFactory(string logFilePathName)
         {
-            _logFilePathName = logFilePathName;
+            _logFilePathName = logFilePathName ?? throw new ArgumentNullException(nameof(logFilePathName));
         }
 
         public override Tuple<ILogFieldList, ILogStreamReader> Create()

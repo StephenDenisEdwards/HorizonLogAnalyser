@@ -15,6 +15,7 @@ namespace Horizon.Utility.LogAnylyser
 
         public LogAnalyser(LogFactory logFactory) : this()
         {
+            if (logFactory == null) throw new ArgumentNullException(nameof(logFactory));
             Add(logFactory.Create());
         }
 
