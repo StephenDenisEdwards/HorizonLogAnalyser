@@ -5,7 +5,7 @@ namespace Horizon.Utility.LogAnylyser
 {
     public class CsvLogFileFactory : LogFactory
     {
-        private string _logFilePathName;
+        private readonly string _logFilePathName;
 
         public CsvLogFileFactory(string logFilePathName)
         {

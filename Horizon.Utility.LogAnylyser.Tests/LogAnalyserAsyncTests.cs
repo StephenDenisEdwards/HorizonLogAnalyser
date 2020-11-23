@@ -14,7 +14,7 @@ namespace Horizon.Utility.LogAnylyser.Tests
         public async Task LogAnalyserAsync_GetAsyncEnumerator_ReturnRow_Success()
         {
             // Arrange
-            var LogAnalyserAsync = new LogAnalyserAsync();
+            var logAnalyserAsync = new LogAnalyserAsync();
             var logFieldList = new Mock<ILogFieldList>();
             var logStreamReader = new Mock<ILogStreamReader>();
 
@@ -34,11 +34,11 @@ namespace Horizon.Utility.LogAnylyser.Tests
 
             var lofFactoryReturn = new Tuple<ILogFieldList, ILogStreamReader>(logFieldList.Object, logStreamReader.Object);
 
-            LogAnalyserAsync.Add(lofFactoryReturn);
+            logAnalyserAsync.Add(lofFactoryReturn);
 
             // Act
             Dictionary<string, string> lineItem = null;
-            await foreach (Dictionary<string, string> item in LogAnalyserAsync)
+            await foreach (Dictionary<string, string> item in logAnalyserAsync)
             {
                 lineItem = item;
                 break;

@@ -5,7 +5,7 @@ namespace Horizon.Utility.LogAnylyser
 {
     public class W3cLogFileFactory : LogFactory
     {
-        private string _logFilePathName;
+        private readonly string _logFilePathName;
 
         public W3cLogFileFactory(string logFilePathName)
         {

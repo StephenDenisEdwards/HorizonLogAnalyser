@@ -5,7 +5,7 @@ namespace Horizon.Utility.LogAnylyser
 {
     public class TextLogStreamReader : ILogStreamReader
     {
-        private StreamReader _streamReader;
+        private readonly StreamReader _streamReader;
 
         public TextLogStreamReader(StreamReader streamReader)
         {
